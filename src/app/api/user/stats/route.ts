@@ -2,6 +2,21 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 
+interface Link {
+  clicks: number;
+}
+
+interface LinkHub {
+  id: string; 
+  name: string;
+  slug: string;
+  isPersonal: boolean;
+  links: Link[];
+  _count: {
+    links: number;
+  };
+}
+
 export async function GET() {
   try {
     const user = await getCurrentUser();
@@ -39,13 +54,13 @@ export async function GET() {
           where: {
             userId: user.id,
             clickedAt: {
-              gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
+              gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
             },
           },
         }),
       ]);
 
-    const linkHubStats = await prisma.linkHub.findMany({
+    const linkHubStats: LinkHub[] = await prisma.linkHub.findMany({
       where: { userId: user.id },
       select: {
         id: true,
