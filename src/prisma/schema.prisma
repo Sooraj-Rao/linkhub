@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  avatar    String?
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  linkHubs  LinkHub[]
+  analytics Analytics[]
+
+  @@map("users")
+}
+
+model LinkHub {
+  id                 String   @id @default(cuid())
+  userId             String
+  name               String
+  slug               String   @unique
+  bio                String?
+  avatar             String?
+  theme              String   @default("modern")
+  backgroundType     String?  @default("solid")
+  backgroundColor    String?  @default("#ffffff")
+  backgroundGradient String?
+  backgroundImage    String?
+  textColor          String?  @default("#1f2937")
+  buttonStyle        String?  @default("rounded")
+  buttonColor        String?  @default("#8b5cf6")
+  buttonTextColor    String?  @default("#ffffff")
+  borderRadius       Int?     @default(12)
+  shadowStyle        String?  @default("soft")
+  isPersonal         Boolean  @default(false)
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  links Link[]
+
+  @@map("link_hubs")
+}
+
+model Link {
+  id          String   @id @default(cuid())
+  linkHubId   String
+  title       String
+  url         String
+  description String?
+  icon        String?
+  type        String   @default("link")
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  clicks      Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  linkHub   LinkHub     @relation(fields: [linkHubId], references: [id], onDelete: Cascade)
+  analytics Analytics[]
+
+  @@map("links")
+}
+
+model Analytics {
+  id        String   @id @default(cuid())
+  linkId    String
+  userId    String
+  clickedAt DateTime @default(now())
+  userAgent String?
+  ipAddress String?
+  country   String?
+  city      String?
+
+  link Link @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("analytics")
+}
