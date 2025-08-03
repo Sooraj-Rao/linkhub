@@ -1,43 +1,56 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, Mail, Lock } from "lucide-react"
-import { useAuth } from "@/components/providers/auth-provider"
+import type React from "react";
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, Mail, Lock } from "lucide-react";
+import { useAuth } from "@/components/providers/auth-provider";
+import { Logo } from "../dashboard/dashboard-sidebar";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  const { signIn } = useAuth()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
     try {
-      await signIn(email, password)
+      await signIn(email, password);
     } catch (err: any) {
-      setError(err.message || "An error occurred during login")
+      setError(err.message || "An error occurred during login");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">Welcome</CardTitle>
-        <CardDescription className="text-center">Sign in to your LinkHub account</CardDescription>
+        <Logo />
+        <CardTitle className="text-2xl font-bold text-center">
+          Welcome
+        </CardTitle>
+        <CardDescription className="text-center">
+          Sign in to your LinkHub account
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (
@@ -102,5 +115,5 @@ export default function LoginForm() {
         </p>
       </CardFooter>
     </Card>
-  )
+  );
 }

@@ -7,7 +7,7 @@ interface Link {
 }
 
 interface LinkHub {
-  id: string; 
+  id: string;
   name: string;
   slug: string;
   isPersonal: boolean;
@@ -25,40 +25,30 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const [linkHubsCount, totalLinks, totalClicks, recentActivity] =
-      await Promise.all([
-        prisma.linkHub.count({
-          where: { userId: user.id },
-        }),
+    const [linkHubsCount, totalLinks, totalClicks] = await Promise.all([
+      prisma.linkHub.count({
+        where: { userId: user.id },
+      }),
 
-        prisma.link.count({
-          where: {
-            linkHub: {
-              userId: user.id,
-            },
-          },
-        }),
-
-        prisma.link.aggregate({
-          where: {
-            linkHub: {
-              userId: user.id,
-            },
-          },
-          _sum: {
-            clicks: true,
-          },
-        }),
-
-        prisma.analytics.count({
-          where: {
+      prisma.link.count({
+        where: {
+          linkHub: {
             userId: user.id,
-            clickedAt: {
-              gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-            },
           },
-        }),
-      ]);
+        },
+      }),
+
+      prisma.link.aggregate({
+        where: {
+          linkHub: {
+            userId: user.id,
+          },
+        },
+        _sum: {
+          clicks: true,
+        },
+      }),
+    ]);
 
     const linkHubStats: LinkHub[] = await prisma.linkHub.findMany({
       where: { userId: user.id },
@@ -96,7 +86,6 @@ export async function GET() {
         linkHubsCount,
         totalLinks,
         totalClicks: totalClicks._sum.clicks || 0,
-        recentActivity,
         linkHubs: linkHubsWithStats,
       },
     });

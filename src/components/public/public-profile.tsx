@@ -14,18 +14,12 @@ export default function PublicProfile({ linkHub }: { linkHub: LinkHub }) {
     setMounted(true);
   }, []);
 
-  const handleLinkClick = async (linkId: string, url: string) => {
-    try {
-      await fetch("/api/analytics/click", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ linkId }),
-      });
-    } catch (error) {
-      console.error("Failed to track click:", error);
-    }
-
-    window.open(url, "_blank", "noopener,noreferrer");
+  const handleLinkClick = async (linkId: string) => {
+    await fetch("/api/analytics/click", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ linkId }),
+    });
   };
 
   const handleShare = async () => {
@@ -149,51 +143,58 @@ export default function PublicProfile({ linkHub }: { linkHub: LinkHub }) {
           </div>
         </div>
 
-        <div className="space-y-4 mb-8">
+        <div className=" mb-8">
           {(linkHub?.links ?? [])
             ?.filter((link) => link.isActive)
             ?.sort((a, b) => a.order - b.order)
             ?.map((link) => (
-              <button
+              <a
                 key={link.id}
-                onClick={() => handleLinkClick(link.id, link.url)}
-                className="w-full p-4 text-left hover:scale-105 transition-all duration-200 group backdrop-blur-sm border border-white/10"
-                style={{
-                  ...buttonStyleObj,
-                }}
+                target="_blank"
+                href={link.url}
+                onClick={() => handleLinkClick(link.id)}
               >
-                <div className="flex items-center">
-                  {link.icon && (
-                    <img
-                      src={link.icon || "/placeholder.svg"}
-                      alt={linkHub.name}
-                      className="w-10 h-10 mr-2 rounded-full mx-auto   object-cover"
-                    />
-                  )}
+                <button
+                  className="w-full p-4 my-2 text-left hover:scale-105 transition-all duration-200 group backdrop-blur-sm border border-white/10"
+                  style={{
+                    ...buttonStyleObj,
+                  }}
+                >
+                  <div className="flex items-center">
+                    {link.icon && (
+                      <img
+                        src={link.icon || "/placeholder.svg"}
+                        alt={linkHub.name}
+                        className="w-10 h-10 mr-2 rounded-full mx-auto   object-cover"
+                      />
+                    )}
 
-                  <div className="flex-1 min-w-0">
-                    <h3
-                      className="font-semibold group-hover:opacity-90 transition-opacity truncate"
-                      style={{ color: linkHub.buttonTextColor || "#ffffff" }}
-                    >
-                      {link.title}
-                    </h3>
-                    {link.description && (
-                      <p
-                        className="text-sm  transition-opacity  truncate opacity-60"
+                    <div className="flex-1 min-w-0">
+                      <h3
+                        className="font-semibold group-hover:opacity-90 transition-opacity truncate"
                         style={{ color: linkHub.buttonTextColor || "#ffffff" }}
                       >
-                        {link.description}
-                      </p>
-                    )}
-                  </div>
+                        {link.title}
+                      </h3>
+                      {link.description && (
+                        <p
+                          className="text-sm  transition-opacity  truncate opacity-60"
+                          style={{
+                            color: linkHub.buttonTextColor || "#ffffff",
+                          }}
+                        >
+                          {link.description}
+                        </p>
+                      )}
+                    </div>
 
-                  <ExternalLink
-                    className="w-5 h-5 ml-2 opacity-60 group-hover:opacity-80 transition-opacity"
-                    style={{ color: linkHub.buttonTextColor || "#ffffff" }}
-                  />
-                </div>
-              </button>
+                    <ExternalLink
+                      className="w-5 h-5 ml-2 opacity-60 group-hover:opacity-80 transition-opacity"
+                      style={{ color: linkHub.buttonTextColor || "#ffffff" }}
+                    />
+                  </div>
+                </button>
+              </a>
             ))}
         </div>
 

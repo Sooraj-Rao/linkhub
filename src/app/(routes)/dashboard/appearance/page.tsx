@@ -68,20 +68,17 @@ export default function AppearancePage() {
 
   if (loading) {
     return (
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-xl font-bold ">Appearance</h1>
+      <div className="space-y-8 p-6">
+        <div className="glass rounded-2xl ">
+          <Skeleton className="h-4  rounded-2xl   w-48 mb-4" />
+          <Skeleton className="h-10 w-full max-w-md  rounded-2xl   " />
         </div>
-        <div className="glass rounded-2xl p-6">
-          <Skeleton className="h-4 w-48 mb-4" />
-          <Skeleton className="h-10 w-full max-w-md" />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="space-y-6">
-            <Skeleton className="h-64 w-full rounded-2xl" />
-            <Skeleton className="h-96 w-full rounded-2xl" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="space-y-6 col-span-2">
+            <Skeleton className="h-64 w-full rounded-2xl " />
+            <Skeleton className="h-96 w-full rounded-2xl " />
           </div>
-          <Skeleton className="h-[600px] w-full rounded-2xl" />
+          <Skeleton className="h-[600px] w-full rounded-2xl " />
         </div>
       </div>
     );
@@ -117,7 +114,7 @@ export default function AppearancePage() {
                   )}
                   <span>{linkHub.name}</span>
                   {linkHub.isPersonal && (
-                    <span className="text-xs text-primary">(Personal)</span>
+                    <span className=" text-primary">(Personal)</span>
                   )}
                 </div>
               </SelectItem>
@@ -134,7 +131,7 @@ export default function AppearancePage() {
               onUpdate={handleLinkHubUpdate}
             />
           </div>
-          <div className="lg:sticky lg:top-8 rounded-md  overflow-hidden">
+          <div className="lg:fixed lg:top-2 max-h-[calc(100vh-20px)] lg:right-8 w-[25%]  rounded-md overflow-scroll hideScrollBar">
             <PublicProfile linkHub={selectedLinkHub} />
           </div>
         </div>

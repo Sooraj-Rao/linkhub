@@ -11,10 +11,13 @@ import {
   Plus,
   Moon,
   Sun,
+  SkipBackIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "../ui/theme-toggle";
 import { useTheme } from "next-themes";
+import { Button } from "../ui/button";
+import { toast } from "sonner";
 
 const navigation = [
   { name: "Personal LinkHub", href: "/dashboard/links", icon: Home },
@@ -27,6 +30,20 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
   const { theme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", { method: "POST" });
+      const res = await response.json();
+      if (!res.success) {
+        toast.error("Failed to logout");
+        return;
+      }
+      window.location.href = "/";
+    } catch {
+      toast.error("Failed to logout");
+    }
+  };
 
   return (
     <>
@@ -41,11 +58,11 @@ export default function DashboardSidebar() {
 
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 h-screen  shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
+          "fixed inset-y-0 left-0 z-50 w-64 h-screen shadow-lg transform transition-transform duration-300 ease-in-out bg-background lg:translate-x-0",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex items-center justify-between h-16 px-6 ">
+        <div className="flex items-center justify-between h-16 px-6">
           <Logo />
           <button
             onClick={() => setIsMobileMenuOpen(false)}
@@ -63,9 +80,9 @@ export default function DashboardSidebar() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "flex items-center  px-4 py-3 text-sm font-medium rounded-lg transition-colors",
+                      "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors",
                       isActive
-                        ? " bg-secondary"
+                        ? "bg-secondary"
                         : "hover:bg-secondary/30 text-muted-foreground"
                     )}
                   >
@@ -82,17 +99,27 @@ export default function DashboardSidebar() {
             })}
           </ul>
         </nav>
-        <div className=" mt-6 ">
+        <div className="mt-6">
           <ThemeToggle>
-            <div className="flex items-center text-muted-foreground justify-center gap-2  px-4 py-3 text-sm">
-              {theme !== "light" ? <Sun size={16}/> : <Moon size={16} />}
+            <div className="flex items-center text-muted-foreground justify-center gap-2 px-4 py-3 text-sm">
+              {theme !== "light" ? <Sun size={16} /> : <Moon size={16} />}
               Change Theme
             </div>
           </ThemeToggle>
         </div>
+        <Button
+          onClick={handleLogout}
+          variant="ghost"
+          className="absolute bottom-4 left-[50%] -translate-x-[50%]"
+        >
+          <SkipBackIcon size={14} />
+          Logout
+        </Button>
       </div>
     </>
   );
 }
 
-export const Logo = () => <h1 className="text-xl font-bold">Linkhub</h1>;
+export const Logo = () => (
+  <h1 className="text-xl text-center font-bold">Linkhub</h1>
+);

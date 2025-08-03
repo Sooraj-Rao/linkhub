@@ -54,10 +54,11 @@ export default function AnalyticsOverview() {
   if (isLoading) {
     return (
       <div className="glass rounded-2xl p-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+        <div className=" h-40 w-full bg-gray-300 rounded-xl animate-pulse dark:bg-muted space-y-4"></div>
+        <div className="mt-12 space-y-3">
+          <p className=" h-6 bg-gray-300 rounded-lg animate-pulse dark:bg-muted"></p>
+          <div className=" h-20 w-full bg-gray-300 rounded-xl animate-pulse dark:bg-muted space-y-4 "></div>
+          <div className=" h-20 w-full bg-gray-300 rounded-xl animate-pulse dark:bg-muted space-y-4"></div>
         </div>
       </div>
     );

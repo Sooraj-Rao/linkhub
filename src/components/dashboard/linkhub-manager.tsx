@@ -60,33 +60,15 @@ export default function LinkHubManager({
   onupdate,
 }: LinkHubManagerProps) {
   const [linkHub, setLinkHub] = useState<LinkHub>(initialLinkHub);
-  const [links, setLinks] = useState<Link[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [links, setLinks] = useState<Link[]>(initialLinkHub.links || []);
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [editingLink, setEditingLink] = useState<Link | null>(null);
   const [editingLinkHub, setEditingLinkHub] = useState(false);
 
   useEffect(() => {
-    fetchLinks();
-  }, [linkHub.id]);
-
-  const fetchLinks = async () => {
-    try {
-      const response = await fetch(`/api/linkhubs/${linkHub.id}/links`);
-      if (response.ok) {
-        if (onupdate) onupdate();
-        const data = await response.json();
-        setLinks(data);
-      } else {
-        toast.error("Failed to fetch links");
-      }
-    } catch (error) {
-      console.error("Failed to fetch links:", error);
-      toast.error("Failed to fetch links");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setLinkHub(initialLinkHub);
+    setLinks(initialLinkHub.links || []);
+  }, [initialLinkHub]);
 
   const refreshLinkHub = async () => {
     try {
@@ -94,6 +76,7 @@ export default function LinkHubManager({
       if (response.ok) {
         const data = await response.json();
         setLinkHub(data);
+        setLinks(data.links || []);
         if (onupdate) onupdate();
       }
     } catch (error) {
@@ -123,17 +106,13 @@ export default function LinkHubManager({
       );
 
       if (!response.ok) {
-        fetchLinks();
         toast.error("Failed to update link order");
       } else {
-        if (onupdate) {
-          onupdate();
-        }
+        if (onupdate) onupdate();
         toast.success("Link order updated!");
       }
     } catch (error) {
       console.error("Failed to update link order:", error);
-      fetchLinks();
       toast.error("Failed to update link order");
     }
   };
@@ -180,30 +159,18 @@ export default function LinkHubManager({
 
   const handleLinkAdded = () => {
     setIsAddingLink(false);
-    fetchLinks();
+    if (onupdate) onupdate();
   };
 
   const handleLinkEdited = () => {
     setEditingLink(null);
-    fetchLinks();
+    if (onupdate) onupdate();
   };
 
   const handleLinkHubEdited = () => {
     setEditingLinkHub(false);
     refreshLinkHub();
   };
-
-  if (loading) {
-    return (
-      <div className="glass rounded-2xl p-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -218,10 +185,12 @@ export default function LinkHubManager({
               />
             )}
             <div>
-              <h2 className="text-xl font-semibold ">{linkHub.name}</h2>
-              {/* {linkHub.bio && <p className="">{linkHub.bio}</p>} */}
-              <div className=" flex gap-4 items-center">
-                <a href={`${process.env.NEXT_PUBLIC_APP_URL}/${linkHub.slug}`}>
+              <h2 className="text-xl font-semibold">{linkHub.name}</h2>
+              <div className="flex gap-4 items-center">
+                <a
+                  target="_blank"
+                  href={`${process.env.NEXT_PUBLIC_APP_URL}/${linkHub.slug}`}
+                >
                   <code className="text-sm text-primary hover:underline font-medium">
                     {typeof window !== "undefined"
                       ? window.location.origin
@@ -232,7 +201,7 @@ export default function LinkHubManager({
                 <Button
                   variant="outline"
                   size="icon"
-                  className=" scale-90"
+                  className="scale-90"
                   onClick={() => {
                     window.navigator.clipboard.writeText(
                       `${process.env.NEXT_PUBLIC_APP_URL}/${linkHub.slug}`
@@ -268,9 +237,9 @@ export default function LinkHubManager({
         </div>
       </div>
 
-      <div className="glass rounded-2xl p-6">
+      <div className="glass rounded-2xl px-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold ">Links ({links.length})</h3>
+          <h3 className="text-lg font-semibold">Links ({links.length})</h3>
           <Dialog open={isAddingLink} onOpenChange={setIsAddingLink}>
             <DialogTrigger asChild>
               <Button>
@@ -307,13 +276,13 @@ export default function LinkHubManager({
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           className={`flex items-center group p-4 rounded-lg border transition-all ${
-                            link.isActive ? " " : " opacity-60"
+                            link.isActive ? "" : "opacity-60"
                           } ${
                             snapshot.isDragging ? "shadow-lg scale-105" : ""
                           }`}
                         >
                           <div {...provided.dragHandleProps} className="mr-3">
-                            <GripVertical className="w-4 h-4 -400 cursor-grab" />
+                            <GripVertical className="w-4 h-4 cursor-grab" />
                           </div>
 
                           <div className="flex-1 min-w-0">
@@ -322,25 +291,25 @@ export default function LinkHubManager({
                                 <img
                                   src={link.icon || "/placeholder.svg"}
                                   alt={linkHub.name}
-                                  className="w-10 h-10  rounded-full    object-cover"
+                                  className="w-10 h-10 rounded-full object-cover"
                                 />
                               )}
-                              <h4 className="font-medium  truncate">
+                              <h4 className="font-medium truncate">
                                 {link.title}
                               </h4>
                               {link.isActive ? (
                                 <Eye className="w-4 h-4 text-green-500" />
                               ) : (
-                                <EyeOff className="w-4 h-4 " />
+                                <EyeOff className="w-4 h-4" />
                               )}
                             </div>
                             <a href={link.url} target="_blank">
-                              <p className="text-sm text-primary hover:underline cursor-pointer  truncate mb-1">
+                              <p className="text-sm text-primary hover:underline cursor-pointer truncate mb-1">
                                 {link.url}
                               </p>
                             </a>
                             {link.description && (
-                              <p className="text-xs  truncate">
+                              <p className="text-xs truncate">
                                 {link.description}
                               </p>
                             )}
@@ -431,10 +400,10 @@ export default function LinkHubManager({
           </DragDropContext>
         ) : (
           <div className="text-center py-12">
-            <div className="w-16 h-16  bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <ExternalLink className="w-8 h-8 " />
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+              <ExternalLink className="w-8 h-8" />
             </div>
-            <h4 className="text-lg font-medium  mb-2">No links yet</h4>
+            <h4 className="text-lg font-medium mb-2">No links yet</h4>
             <p className="text-gray-500 mb-4">
               Start building your {isPersonal ? "personal" : "custom"} LinkHub
               by adding your first link.

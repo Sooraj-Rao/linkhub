@@ -1,14 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Shield, Power, PowerOff } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 export default function AccountSettings() {
-  const [isAccountActive, setIsAccountActive] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isAccountActive, setIsAccountActive] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchAccountDetails = async () => {
+      try {
+        const res = await fetch("/api/user/account");
+        if (!res.ok) throw new Error("Failed to fetch status");
+        const data = await res.json();
+        setIsAccountActive(data.isActive);
+      } catch {
+        toast.error("Failed to fetch status");
+      }
+    };
+
+    fetchAccountDetails();
+  }, []);
 
   const handleAccountToggle = async (enabled: boolean) => {
     setIsLoading(true);

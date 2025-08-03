@@ -18,6 +18,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Mail, Lock, User } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
+import { Logo } from "../dashboard/dashboard-sidebar";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
@@ -57,7 +58,8 @@ export default function RegisterForm() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold text-center">
+        <Logo />
+        <CardTitle className="text-2xl  font-bold text-center">
           Create account
         </CardTitle>
         <CardDescription className="text-center">

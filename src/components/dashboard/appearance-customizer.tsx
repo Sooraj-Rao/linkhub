@@ -202,7 +202,7 @@ export default function AppearanceCustomizer({
                           : " border-transparent "
                       }`}
                     >
-                      <div className="w-full h-12 rounded-lg mb-2 bg-gradient-to-r from-purple-400 to-pink-400" />
+                      <div className="w-full h-12 rounded-lg mb-2 bg-gradient-to-r from-primary to-pink-400" />
                       <div className="text-sm font-medium text-center">
                         Gradient
                       </div>
@@ -379,7 +379,7 @@ export default function AppearanceCustomizer({
                         }`}
                       >
                         <div
-                          className={`w-full h-8 bg-purple-500 mb-2 ${style.preview}`}
+                          className={`w-full h-8 bg-primary mb-2 ${style.preview}`}
                         />
                         <div className="text-xs font-medium text-center">
                           {style.name}

@@ -109,7 +109,7 @@ export default function ProfileSettings() {
             />
             <label
               htmlFor="avatar-upload"
-              className="absolute -bottom-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-purple-700 transition-colors"
+              className="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary transition-colors"
             >
               <Camera className="w-4 h-4 text-white" />
             </label>

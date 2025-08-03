@@ -92,7 +92,7 @@ export default function CustomLinkHubCard({
   const linkCount = linkHub._count?.links || 0;
 
   return (
-    <Card className=" bg-muted/10 border-muted/80  shadow-lg dark:shadow-muted/20 transition-all duration-200 group">
+    <Card className=" bg-muted/20 dark:border-muted/40 border-muted   shadow-lg transition-all duration-200 group">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">

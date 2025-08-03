@@ -8,6 +8,7 @@ CREATE TABLE "public"."users" (
     "bio" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -57,20 +58,6 @@ CREATE TABLE "public"."links" (
     CONSTRAINT "links_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "public"."analytics" (
-    "id" TEXT NOT NULL,
-    "linkId" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "clickedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userAgent" TEXT,
-    "ipAddress" TEXT,
-    "country" TEXT,
-    "city" TEXT,
-
-    CONSTRAINT "analytics_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "public"."users"("email");
 
@@ -82,9 +69,3 @@ ALTER TABLE "public"."link_hubs" ADD CONSTRAINT "link_hubs_userId_fkey" FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE "public"."links" ADD CONSTRAINT "links_linkHubId_fkey" FOREIGN KEY ("linkHubId") REFERENCES "public"."link_hubs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "public"."analytics" ADD CONSTRAINT "analytics_linkId_fkey" FOREIGN KEY ("linkId") REFERENCES "public"."links"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "public"."analytics" ADD CONSTRAINT "analytics_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
