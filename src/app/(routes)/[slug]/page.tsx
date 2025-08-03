@@ -4,11 +4,11 @@ import PublicProfile from "@/components/public/public-profile";
 import { prisma } from "@/lib/prisma";
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug } = params;
   const linkHub = await prisma.linkHub.findUnique({
     where: { slug, isActive: true },
     include: { user: true },
