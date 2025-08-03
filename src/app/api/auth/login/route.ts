@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
+console.log(process.env.DATABASE_URL)
     const user = await prisma.user.findUnique({
       where: { email },
     });
