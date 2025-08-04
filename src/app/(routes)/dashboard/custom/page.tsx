@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,51 +14,59 @@ import CustomLinkHubCard from "@/components/dashboard/custom-linkhub-card";
 import CreateCustomLinkHubForm from "@/components/dashboard/create-custom-linkhub-form";
 import type { LinkHub } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import useSWR from "swr";
+
+const fetcher = async (url: string) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to fetch custom LinkHubs");
+  }
+  return response.json();
+};
 
 export default function CustomLinkHubsPage() {
-  const [customLinkHubs, setCustomLinkHubs] = useState<LinkHub[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    data: customLinkHubs,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<LinkHub[]>("/api/linkhubs/custom", fetcher);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  useEffect(() => {
-    fetchCustomLinkHubs();
-  }, []);
-
-  const fetchCustomLinkHubs = async () => {
-    try {
-      const response = await fetch("/api/linkhubs/custom");
-      if (response.ok) {
-        const data = await response.json();
-        setCustomLinkHubs(data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch custom LinkHubs:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreateSuccess = () => {
+  const handleCreateSuccess = async () => {
     setIsCreateModalOpen(false);
-    fetchCustomLinkHubs();
+    await mutate(); 
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className="space-y-8 ">
+      <div className="space-y-8">
         <div className="flex justify-between items-center">
-          <Skeleton className="h-8 w-1/3  rounded "></Skeleton>
-          <Skeleton className="h-8 w-36  rounded "></Skeleton>
+          <Skeleton className="h-8 w-1/3 rounded"></Skeleton>
+          <Skeleton className="h-8 w-36 rounded"></Skeleton>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(3)].map((_, index) => (
             <Skeleton
               key={index}
-              className="glass rounded-2xl p-6  h-40 border-muted/80 shadow-lg "
+              className="glass rounded-2xl p-6 h-40 border-muted/80 shadow-lg"
             ></Skeleton>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="glass rounded-2xl p-12 text-center">
+        <h3 className="text-lg font-medium mb-2">
+          Error Loading Custom LinkHubs
+        </h3>
+        <p className="text-gray-600 mb-6">
+          Failed to load custom LinkHubs. Please try again later.
+        </p>
       </div>
     );
   }
@@ -86,13 +94,13 @@ export default function CustomLinkHubsPage() {
         </Dialog>
       </div>
 
-      {customLinkHubs.length > 0 ? (
+      {customLinkHubs && customLinkHubs.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {customLinkHubs.map((linkHub) => (
             <CustomLinkHubCard
               key={linkHub.id}
               linkHub={linkHub}
-              onUpdate={fetchCustomLinkHubs}
+              onUpdate={mutate}
             />
           ))}
         </div>

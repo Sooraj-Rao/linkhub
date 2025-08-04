@@ -58,9 +58,8 @@ export default function RegisterForm() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <Logo />
-        <CardTitle className="text-2xl  font-bold text-center">
-          Create account
+        <CardTitle className="flex justify-center ">
+          <Logo />
         </CardTitle>
         <CardDescription className="text-center">
           Sign up for your LinkHub account

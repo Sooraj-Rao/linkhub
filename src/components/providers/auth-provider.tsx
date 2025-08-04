@@ -4,6 +4,7 @@ import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@/lib/types";
+import { toast } from "sonner";
 
 interface AuthContextType {
   user: User | null;
@@ -63,7 +64,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     setUser(data.user);
-     router.push("/dashboard/links");
+    toast("Login Success");
+    router.push("/dashboard/links");
     router.refresh();
   };
 
@@ -81,6 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     setUser(data.user);
+    toast("Register Success");
     router.push("/dashboard/links");
     router.refresh();
   };
@@ -92,6 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (response.ok) {
       setUser(null);
+      toast("Logout Success");
       router.push("/auth/login");
       router.refresh();
     }

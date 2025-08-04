@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,53 +8,49 @@ import type { LinkHub } from "@/lib/types";
 import { toast } from "sonner";
 import PublicProfile from "@/components/public/public-profile";
 import { LinkhubSkeleton } from "@/components/dashboard/links/link-skeleton";
+import useSWR from "swr";
+
+const fetcher = async (url: string) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("LinkHub not found");
+  }
+  return response.json();
+};
 
 export default function LinkHubLinksPage() {
   const params = useParams();
   const router = useRouter();
-  const [linkHub, setLinkHub] = useState<LinkHub | null>(null);
-  const [loading, setLoading] = useState(true);
-
   const linkHubId = params.id as string;
 
-  useEffect(() => {
-    if (linkHubId) {
-      fetchLinkHub();
-    }
-  }, [linkHubId]);
+  const {
+    data: linkHub,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<LinkHub>(linkHubId ? `/api/linkhubs/${linkHubId}` : null, fetcher);
 
-  const fetchLinkHub = async () => {
-    try {
-      const response = await fetch(`/api/linkhubs/${linkHubId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setLinkHub(data);
-      } else {
-        toast.error("LinkHub not found");
-        router.push("/dashboard/custom");
-      }
-    } catch (error) {
-      console.error("Failed to fetch LinkHub:", error);
-      toast.error("Failed to load LinkHub");
-      router.push("/dashboard/custom");
-    } finally {
-      setLoading(false);
-    }
+  const handleUpdate = async () => {
+    await mutate(); // Trigger revalidation of the data
   };
 
-  if (loading) {
+  if (isLoading) {
     return <LinkhubSkeleton />;
   }
 
-  if (!linkHub) {
+  if (error || !linkHub) {
+    if (error) {
+      console.error("Failed to fetch LinkHub:", error);
+      toast.error("Failed to load LinkHub");
+    }
     return (
       <div className="text-center py-12">
         <h2 className="text-xl font-semibold text-gray-900 mb-2">
           LinkHub not found
         </h2>
         <p className="text-gray-600 mb-4">
-          The LinkHub youre looking for doesnt exist or you dont have access to
-          it.
+          The LinkHub you&apos;re looking for doesn&apos;t exist or you
+          don&apos;t have access to it.
         </p>
         <Button onClick={() => router.push("/dashboard/custom")}>
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -88,7 +83,7 @@ export default function LinkHubLinksPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className=" col-span-2 ">
           <LinkHubManager
-            onupdate={fetchLinkHub}
+            onupdate={handleUpdate}
             linkHub={linkHub}
             isPersonal={linkHub.isPersonal}
           />

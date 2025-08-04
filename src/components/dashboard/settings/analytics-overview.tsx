@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { BarChart3, ExternalLink, Users, MousePointer } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import useSWR from "swr";
 
 interface UserStats {
   user: {
@@ -29,42 +29,35 @@ interface UserStats {
   };
 }
 
+const fetcher = async (url: string) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to fetch stats");
+  }
+  return response.json();
+};
+
 export default function AnalyticsOverview() {
-  const [stats, setStats] = useState<UserStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
-    try {
-      const response = await fetch("/api/user/stats");
-      if (response.ok) {
-        const data = await response.json();
-        setStats(data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch stats:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    data: stats,
+    error,
+    isLoading,
+  } = useSWR<UserStats>("/api/user/stats", fetcher);
 
   if (isLoading) {
     return (
       <div className="glass rounded-2xl p-6">
-        <div className=" h-40 w-full bg-gray-300 rounded-xl animate-pulse dark:bg-muted space-y-4"></div>
+        <div className="h-40 w-full bg-gray-300 rounded-xl animate-pulse dark:bg-muted space-y-4"></div>
         <div className="mt-12 space-y-3">
-          <p className=" h-6 bg-gray-300 rounded-lg animate-pulse dark:bg-muted"></p>
-          <div className=" h-20 w-full bg-gray-300 rounded-xl animate-pulse dark:bg-muted space-y-4 "></div>
-          <div className=" h-20 w-full bg-gray-300 rounded-xl animate-pulse dark:bg-muted space-y-4"></div>
+          <p className="h-6 bg-gray-300 rounded-lg animate-pulse dark:bg-muted"></p>
+          <div className="h-20 w-full bg-gray-300 rounded-xl animate-pulse dark:bg-muted space-y-4"></div>
+          <div className="h-20 w-full bg-gray-300 rounded-xl animate-pulse dark:bg-muted space-y-4"></div>
         </div>
       </div>
     );
   }
 
-  if (!stats) {
+  if (error || !stats) {
     return (
       <div className="glass rounded-2xl p-6">
         <p className="text-gray-500">Failed to load analytics</p>
@@ -77,7 +70,7 @@ export default function AnalyticsOverview() {
       <div className="glass rounded-2xl p-6">
         <div className="flex items-center space-x-2 mb-4">
           <BarChart3 className="w-5 h-5 text-primary" />
-          <h3 className="font-semibold ">Quick Stats</h3>
+          <h3 className="font-semibold">Quick Stats</h3>
         </div>
         <div className="space-y-3">
           <div className="flex justify-between items-center">
@@ -104,7 +97,7 @@ export default function AnalyticsOverview() {
         </div>
       </div>
       <div className="glass rounded-2xl p-6">
-        <h3 className="font-semibold  mb-4">LinkHub Performance</h3>
+        <h3 className="font-semibold mb-4">LinkHub Performance</h3>
         <div className="space-y-3">
           {stats.stats.linkHubs.map((hub) => (
             <div
@@ -113,25 +106,24 @@ export default function AnalyticsOverview() {
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-2">
-                  <h4 className="font-medium  truncate">{hub.name}</h4>
+                  <h4 className="font-medium truncate">{hub.name}</h4>
                   {hub.isPersonal && (
                     <Badge variant="secondary" className="text-xs">
                       Personal
                     </Badge>
                   )}
                 </div>
-
                 <a
                   target="_blank"
                   href={`${process.env.NEXT_PUBLIC_APP_URL}/${hub.slug}`}
-                  className="text-sm text-primary hover:underline "
+                  className="text-sm text-primary hover:underline"
                 >
-                  view{" "}
+                  view
                 </a>
               </div>
               <div className="text-right">
-                <p className="font-medium ">{hub.totalClicks} clicks</p>
-                <p className="text-sm text-muted-foreground ">
+                <p className="font-medium">{hub.totalClicks} clicks</p>
+                <p className="text-sm text-muted-foreground">
                   {hub._count.links} links
                 </p>
               </div>

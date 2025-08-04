@@ -1,41 +1,40 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useAuth } from "@/components/providers/auth-provider";
 import LinkHubManager from "@/components/dashboard/linkhub-manager";
 import PublicProfile from "@/components/public/public-profile";
 import { LinkHub } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { LinkhubSkeleton } from "@/components/dashboard/links/link-skeleton";
+import useSWR from "swr";
+
+const fetcher = async (url: string) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to fetch personal LinkHub");
+  }
+  return response.json();
+};
 
 export default function PersonalLinksPage() {
   const { user } = useAuth();
-  const [personalLinkHub, setPersonalLinkHub] = useState<LinkHub | null>(null);
-  const [loading, setLoading] = useState(true);
+  const {
+    data: personalLinkHub,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<LinkHub>(user ? "/api/linkhubs/personal" : null, fetcher);
 
-  useEffect(() => {
-    if (user) {
-      fetchPersonalLinkHub();
-    }
-  }, [user]);
-
-  const fetchPersonalLinkHub = async () => {
-    try {
-      const response = await fetch("/api/linkhubs/personal");
-      if (response.ok) {
-        const data = await response.json();
-        setPersonalLinkHub(data);
-      }
-      console.log("data fetched");
-    } catch (error) {
-      console.error("Failed to fetch personal LinkHub:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleUpdate = async () => {
+    await mutate(); // Trigger revalidation of the data
   };
 
-  if (loading) {
+  if (isLoading) {
     return <LinkhubSkeleton />;
+  }
+
+  if (error) {
+    console.error("Failed to fetch personal LinkHub:", error);
   }
 
   return (
@@ -48,7 +47,7 @@ export default function PersonalLinksPage() {
         <div className="flex flex-col 2xl:flex-row justify-center xl:justify-normal gap-8">
           <div className=" xl:w-[65%] ">
             <LinkHubManager
-              onupdate={fetchPersonalLinkHub}
+              onupdate={handleUpdate}
               linkHub={personalLinkHub}
               isPersonal={true}
             />
@@ -65,9 +64,7 @@ export default function PersonalLinksPage() {
           <p className="mb-4">
             Get started by creating your main LinkHub profile
           </p>
-          <Button onClick={fetchPersonalLinkHub}>
-            Create Personal LinkHub
-          </Button>
+          <Button onClick={handleUpdate}>Create Personal LinkHub</Button>
         </div>
       )}
     </div>

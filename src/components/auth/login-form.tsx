@@ -44,9 +44,8 @@ export default function LoginForm() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="space-y-1">
-        <Logo />
-        <CardTitle className="text-2xl font-bold text-center">
-          Welcome
+        <CardTitle className="flex justify-center ">
+          <Logo />
         </CardTitle>
         <CardDescription className="text-center">
           Sign in to your LinkHub account
