@@ -19,7 +19,7 @@ export default function RegisterPage() {
           back to home
         </Button>
       </Link>
-      <RegisterForm />;
+      <RegisterForm />
     </div>
   );
 }

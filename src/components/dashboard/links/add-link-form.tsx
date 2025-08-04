@@ -29,8 +29,16 @@ export default function AddLinkForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
+ 
+    if (formData.title.length > 20) {
+      toast.error("Title is too long.(max 20 char)");
+      return;
+    }
+    if (formData.description.length > 35) {
+      toast.error("Description is too long.(max 35 char)");
+      return;
+    }
+       setIsLoading(true);
     try {
       const response = await fetch(`/api/linkhubs/${linkHubId}/links`, {
         method: "POST",

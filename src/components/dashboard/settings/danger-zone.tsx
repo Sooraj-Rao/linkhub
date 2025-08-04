@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { AlertTriangle, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { AlertTriangle, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,43 +13,43 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/alert-dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function DangerZone() {
-  const [deleteConfirmation, setDeleteConfirmation] = useState("")
-  const [isDeleting, setIsDeleting] = useState(false)
-  const router = useRouter()
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
 
   const handleDeleteAccount = async () => {
     if (deleteConfirmation !== "DELETE") {
-      toast.error("Please type DELETE to confirm")
-      return
+      toast.error("Please type DELETE to confirm");
+      return;
     }
 
-    setIsDeleting(true)
+    setIsDeleting(true);
 
     try {
       const response = await fetch("/api/user/account", {
         method: "DELETE",
-      })
-
+      });
       if (response.ok) {
-        toast.success("Account deleted successfully")
-        router.push("/")
+        await fetch("/api/auth/logout", { method: "POST" });
+        toast.success("Account deleted successfully");
+        router.push("/home");
       } else {
-        throw new Error("Failed to delete account")
+        throw new Error("Failed to delete account");
       }
     } catch (error) {
-      console.error("Failed to delete account:", error)
-      toast.error("Failed to delete account")
+      console.error("Failed to delete account:", error);
+      toast.error("Failed to delete account");
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
-  }
+  };
 
   return (
     <div className="glass rounded-2xl p-6 border-red-200">
@@ -62,7 +62,8 @@ export default function DangerZone() {
         <div className="p-4 border  rounded-lg ">
           <h3 className="font-medium text-red-900 mb-2">Delete Account</h3>
           <p className="text-sm text-red-700 mb-4">
-            Permanently delete your account and all associated data. This action cannot be undone.
+            Permanently delete your account and all associated data. This action
+            cannot be undone.
           </p>
 
           <AlertDialog>
@@ -76,7 +77,8 @@ export default function DangerZone() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete Account</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will permanently delete your account and all associated data including:
+                  This will permanently delete your account and all associated
+                  data including:
                   <ul className="list-disc list-inside mt-2 space-y-1">
                     <li>All LinkHubs and links</li>
                     <li>Analytics data</li>
@@ -84,11 +86,14 @@ export default function DangerZone() {
                     <li>Account settings</li>
                   </ul>
                   <br />
-                  This action cannot be undone. Type <strong>DELETE</strong> to confirm.
+                  This action cannot be undone. Type <strong>DELETE</strong> to
+                  confirm.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <div className="py-4">
-                <Label htmlFor="delete-confirmation">Type DELETE to confirm</Label>
+                <Label htmlFor="delete-confirmation">
+                  Type DELETE to confirm
+                </Label>
                 <Input
                   id="delete-confirmation"
                   value={deleteConfirmation}
@@ -98,7 +103,9 @@ export default function DangerZone() {
                 />
               </div>
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setDeleteConfirmation("")}>Cancel</AlertDialogCancel>
+                <AlertDialogCancel onClick={() => setDeleteConfirmation("")}>
+                  Cancel
+                </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDeleteAccount}
                   disabled={deleteConfirmation !== "DELETE" || isDeleting}
@@ -112,5 +119,5 @@ export default function DangerZone() {
         </div>
       </div>
     </div>
-  )
+  );
 }

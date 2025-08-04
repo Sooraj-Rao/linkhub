@@ -110,7 +110,7 @@ export default function PublicProfile({
         </div>
 
         <div className="backdrop-blur-sm  flex   items-center   bg-white/10 rounded-3xl p-8 text-center mb-6 border border-white/20">
-          <div className="relative mb-6 sm:w-24 sm:h-24 h-16 w-16 rounded-full flex-shrink-0">
+          <div className="relative mb-6 sm:w-24 sm:h-24  h-16 w-16 rounded-full flex-shrink-0">
             {linkHub.avatar ? (
               <img
                 src={linkHub.avatar || "/placeholder.svg"}
@@ -119,7 +119,7 @@ export default function PublicProfile({
               />
             ) : (
               <div
-                className="w-24 h-24 rounded-full mx-auto flex items-center justify-center text-3xl font-bold border-4 border-white/20"
+                className="h-full w-full rounded-full mx-auto flex items-center justify-center text-3xl font-bold border-4 border-white/20"
                 style={{
                   backgroundColor: linkHub.buttonColor || "#000000",
                   color: linkHub.buttonTextColor || "#ffffff",
@@ -130,9 +130,9 @@ export default function PublicProfile({
             )}
           </div>
 
-          <div className=" text-start ml-4">
+          <div className=" text-start ml-4  truncate">
             <h1
-              className="text-2xl font-bold mb-2 "
+              className="sm:text-2xl text-lg font-bold mb-2 "
               style={{ color: textColor }}
             >
               {linkHub.name}

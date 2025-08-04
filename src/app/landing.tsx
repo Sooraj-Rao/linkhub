@@ -219,8 +219,8 @@ function HomePage() {
     <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-black">
       <header className=" flex py-3 backdrop-blur z-[99]  px-10 sticky left-0 top-0 items-center justify-between">
         <Logo />
-        <Link href={'/auth/register'}>
-        <Button>Get Started</Button>
+        <Link href={"/auth/register"}>
+          <Button>Get Started</Button>
         </Link>
       </header>
       <div className="  overflow-x-hidden">
@@ -359,17 +359,15 @@ function HomePage() {
                 Ready to Get Started?
               </h2>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link href="/auth/login">
-                  <Button
-                    size="lg"
-                    className="px-10 py-6 text-lg font-semibold shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 group"
-                  >
-                    Create Your LinkHub Now
-                    <Rocket className="ml-2 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                  </Button>
-                </Link>
-              </div>
+              <Link href="/auth/login">
+                <Button
+                  size="lg"
+                  className="px-10 py-6 text-lg font-semibold shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 group"
+                >
+                  Create Your LinkHub Now
+                  <Rocket className="ml-2 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </Button>
+              </Link>
             </motion.div>
           </div>
         </section>

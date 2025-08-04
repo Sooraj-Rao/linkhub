@@ -116,10 +116,10 @@ export default function CustomLinkHubCard({
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex flex-col items-center  space-x-2">
             <Badge
               variant={linkHub.isActive ? "default" : "secondary"}
-              className="text-xs"
+              className="text-xs  "
             >
               {linkHub.isActive ? (
                 <>

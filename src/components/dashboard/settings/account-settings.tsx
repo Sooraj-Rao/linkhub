@@ -1,31 +1,34 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Shield, Power, PowerOff } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import useSWR from "swr";
-
-interface AccountData {
-  isActive: boolean;
-}
-
-const fetcher = async (url: string) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error("Failed to fetch status");
-  }
-  return response.json();
-};
 
 export default function AccountSettings() {
-  const { data, error, isLoading, mutate } = useSWR<AccountData>(
-    "/api/user/account",
-    fetcher
-  );
+  const [isAccountActive, setIsAccountActive] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchAccountDetails = async () => {
+      try {
+        const res = await fetch("/api/user/account");
+        if (!res.ok) throw new Error("Failed to fetch status");
+        const data = await res.json();
+        setIsAccountActive(data.isActive);
+      } catch {
+        toast.error("Failed to fetch status");
+      }
+    };
+
+    fetchAccountDetails();
+  }, []);
 
   const handleAccountToggle = async (enabled: boolean) => {
+    setIsLoading(true);
+
     try {
       const response = await fetch("/api/user/account", {
         method: "PATCH",
@@ -34,7 +37,7 @@ export default function AccountSettings() {
       });
 
       if (response.ok) {
-        await mutate({ isActive: enabled }, false); // Optimistically update the cache
+        setIsAccountActive(enabled);
         toast.success(
           `Account ${enabled ? "enabled" : "disabled"} successfully`
         );
@@ -44,7 +47,8 @@ export default function AccountSettings() {
     } catch (error) {
       console.error("Failed to update account:", error);
       toast.error("Failed to update account status");
-      await mutate(undefined, { revalidate: true }); // Revalidate on error
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -52,17 +56,21 @@ export default function AccountSettings() {
     <div className="glass rounded-2xl p-6">
       <div className="flex items-center space-x-2 mb-6">
         <Shield className="w-5 h-5 text-primary" />
-        <h2 className="text-xl font-semibold">Account Settings</h2>
+        <h2 className="text-xl font-semibold ">Account Settings</h2>
       </div>
-      {isLoading || !data ? (
-        <Skeleton className="h-20" />
-      ) : error ? (
-        <div className="text-red-500">Failed to load account status</div>
+      {isAccountActive == null ? (
+        <Skeleton className=" h-20" />
       ) : (
-        <div className="space-y-6 h-20">
-          <div className="items-center flex justify-between p-4 border rounded-lg">
+        <div
+          className={`space-y-6 h-20
+        `}
+        >
+          <div
+            className={` items-center flex  justify-between p-4 border rounded-lg
+          `}
+          >
             <div className="flex items-center space-x-3">
-              {data.isActive ? (
+              {isAccountActive ? (
                 <Power className="w-5 h-5 text-green-600" />
               ) : (
                 <PowerOff className="w-5 h-5 text-red-600" />
@@ -70,14 +78,14 @@ export default function AccountSettings() {
               <div>
                 <Label className="text-base font-medium">Account Status</Label>
                 <p className="text-sm text-gray-500">
-                  {data.isActive
+                  {isAccountActive
                     ? "Your account and all LinkHubs are active"
                     : "Your account is disabled. All LinkHubs are hidden."}
                 </p>
               </div>
             </div>
             <Switch
-              checked={data.isActive}
+              checked={isAccountActive}
               onCheckedChange={handleAccountToggle}
               disabled={isLoading}
             />

@@ -43,8 +43,20 @@ export default function CreateCustomLinkHubForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
+    if (formData.name.length > 20) {
+      toast.error("Title is too long.(max 20 char)");
+      return;
+    }
+    if (formData.slug.length > 10) {
+      toast.error("Slug is too long.(max 10 char)");
+      return;
+    }
+    if (formData.bio.length > 35) {
+      toast.error("Description is too long.(max 35 char)");
+      return;
+    }
+        setLoading(true);
     try {
       const response = await fetch("/api/linkhubs/custom", {
         method: "POST",

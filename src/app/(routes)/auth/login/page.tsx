@@ -12,13 +12,13 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <div className=" flex h-screen items-center justify-center">
-      <Link href={'/'}>
+      <Link href={"/"}>
         <Button variant="secondary" className=" absolute top-2 left-2">
           <ArrowLeft />
           back to home
         </Button>
       </Link>
-      <LoginForm />;
+      <LoginForm />
     </div>
   );
 }

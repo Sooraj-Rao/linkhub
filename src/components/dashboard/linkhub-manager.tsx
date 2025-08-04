@@ -84,7 +84,6 @@ export default function LinkHubManager({
     }
   };
 
-  console.log(linkHub)
   const handleDragEnd = async (result: any) => {
     if (!result.destination) return;
 
@@ -173,7 +172,7 @@ export default function LinkHubManager({
   };
   return (
     <div className="space-y-6">
-      <div className="glass rounded-2xl p-6">
+      <div className="glass rounded-2xl md:p-6">
         <div className="flex flex-col xl:flex-row  justify-between mb-4">
           <div className="flex items-center space-x-4">
             {linkHub.avatar && (
@@ -190,17 +189,16 @@ export default function LinkHubManager({
                   target="_blank"
                   href={`${process.env.NEXT_PUBLIC_APP_URL}/${linkHub.slug}`}
                 >
-                  <code className="text-sm text-primary hover:underline font-medium">
+                  <code className="text-sm text-primary flex items-center   hover:underline   font-medium">
                     {typeof window !== "undefined"
                       ? window.location.origin
                       : "linkhub.io"}
-                    /{linkHub.slug}
+                    /<p className="max-w-16 sm:max-w-40 overflow-hidden">{linkHub.slug}</p>
                   </code>
                 </a>
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="icon"
-                  className="scale-90"
                   onClick={() => {
                     window.navigator.clipboard.writeText(
                       `${process.env.NEXT_PUBLIC_APP_URL}/${linkHub.slug}`
@@ -236,7 +234,7 @@ export default function LinkHubManager({
         </div>
       </div>
 
-      <div className="glass rounded-2xl px-6">
+      <div className="glass rounded-2xl md:px-6">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold">Links ({links.length})</h3>
           <Dialog open={isAddingLink} onOpenChange={setIsAddingLink}>
@@ -296,11 +294,13 @@ export default function LinkHubManager({
                               <h4 className="font-medium truncate">
                                 {link.title}
                               </h4>
-                              {link.isActive ? (
-                                <Eye className="w-4 h-4 text-green-500" />
-                              ) : (
-                                <EyeOff className="w-4 h-4" />
-                              )}
+                              <span className=" md:block hidden">
+                                {link.isActive ? (
+                                  <Eye className="w-4 h-4 text-green-500" />
+                                ) : (
+                                  <EyeOff className="w-4 h-4" />
+                                )}
+                              </span>
                             </div>
                             <a href={link.url} target="_blank">
                               <p className="text-sm text-primary hover:underline cursor-pointer truncate mb-1">

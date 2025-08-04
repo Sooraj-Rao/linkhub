@@ -5,7 +5,7 @@ import DangerZone from "@/components/dashboard/settings/danger-zone";
 
 export default function SettingsPage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 md:p-5">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold ">Settings</h1>
