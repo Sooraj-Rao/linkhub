@@ -32,12 +32,12 @@ model LinkHub {
   avatar             String?
   theme              String   @default("modern")
   backgroundType     String?  @default("solid")
-  backgroundColor    String?  @default("#ffffff")
+  backgroundColor    String?  @default("#080808")
   backgroundGradient String?
   backgroundImage    String?
-  textColor          String?  @default("#1f2937")
-  buttonStyle        String?  @default("rounded")
-  buttonColor        String?  @default("#8b5cf6")
+  textColor          String?  @default("white")
+  buttonStyle        String?  @default("10px")
+  buttonColor        String?  @default("#0B0C0E")
   buttonTextColor    String?  @default("#ffffff")
   borderRadius       Int?     @default(12)
   shadowStyle        String?  @default("soft")

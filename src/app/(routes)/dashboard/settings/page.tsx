@@ -12,8 +12,8 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 ">
+      <div className="flex  lg:flex-row flex-col-reverse  gap-8">
+        <div className=" lg:w-[70%] ">
           <Suspense
             fallback={<div className="glass rounded-2xl p-6">Loading...</div>}
           >
@@ -23,7 +23,7 @@ export default function SettingsPage() {
           </Suspense>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 lg:w-[30%]">
           <Suspense
             fallback={<div className="glass rounded-2xl p-6">Loading...</div>}
           >

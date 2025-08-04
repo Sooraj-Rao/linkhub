@@ -84,6 +84,7 @@ export default function LinkHubManager({
     }
   };
 
+  console.log(linkHub)
   const handleDragEnd = async (result: any) => {
     if (!result.destination) return;
 
@@ -92,7 +93,6 @@ export default function LinkHubManager({
     items.splice(result.destination.index, 0, reorderedItem);
 
     setLinks(items);
-
     try {
       const response = await fetch(
         `/api/linkhubs/${linkHub.id}/links/reorder`,
@@ -171,11 +171,10 @@ export default function LinkHubManager({
     setEditingLinkHub(false);
     refreshLinkHub();
   };
-
   return (
     <div className="space-y-6">
       <div className="glass rounded-2xl p-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col xl:flex-row  justify-between mb-4">
           <div className="flex items-center space-x-4">
             {linkHub.avatar && (
               <img
@@ -214,7 +213,7 @@ export default function LinkHubManager({
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex  items-center mt-3 space-x-2">
             <Button
               variant="outline"
               size="sm"

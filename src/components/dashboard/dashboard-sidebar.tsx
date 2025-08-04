@@ -121,5 +121,7 @@ export default function DashboardSidebar() {
 }
 
 export const Logo = () => (
-  <h1 className="text-xl text-center font-bold">Linkhub</h1>
+  <h1 className="text-xl text-center font-bold flex items-center gap-x-2">
+    <img className=" h-6 w-6" src="../../../logo.png" alt="" />
+    Linkhub</h1>
 );

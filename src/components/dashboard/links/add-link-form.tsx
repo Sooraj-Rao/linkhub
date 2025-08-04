@@ -6,28 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { toast } from "sonner";
 
 interface AddLinkFormProps {
   linkHubId: string;
   onSuccess: () => void;
 }
-
-const linkTypes = [
-  { value: "website", label: "Website", icon: "🌐" },
-  { value: "social", label: "Social Media", icon: "📱" },
-  { value: "video", label: "Video", icon: "🎥" },
-  { value: "music", label: "Music", icon: "🎵" },
-  { value: "store", label: "Store", icon: "🛍️" },
-  { value: "other", label: "Other", icon: "🔗" },
-];
 
 export default function AddLinkForm({
   linkHubId,
@@ -115,29 +100,7 @@ export default function AddLinkForm({
       </div>
 
       <div>
-        <Label htmlFor="type">Type</Label>
-        <Select
-          value={formData.type}
-          onValueChange={(value) => setFormData({ ...formData, type: value })}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select link type" />
-          </SelectTrigger>
-          <SelectContent>
-            {linkTypes.map((type) => (
-              <SelectItem key={type.value} value={type.value}>
-                <span className="flex items-center">
-                  <span className="mr-2">{type.icon}</span>
-                  {type.label}
-                </span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <Label htmlFor="icon">Icon URL (Optional)</Label>
+        <Label htmlFor="icon">Icon URL</Label>
         <Input
           id="icon"
           type="url"

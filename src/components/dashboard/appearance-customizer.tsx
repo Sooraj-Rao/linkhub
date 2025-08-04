@@ -270,7 +270,7 @@ export default function AppearanceCustomizer({
                 <Label className="text-sm font-medium  block">
                   Gradient Presets
                 </Label>
-                <div className="grid grid-cols-6 gap-3">
+                <div className="grid sm:grid-cols-6 grid-cols-3 gap-3">
                   {gradientPresets.map((preset) => (
                     <button
                       key={preset.name}
@@ -281,15 +281,17 @@ export default function AppearanceCustomizer({
                           backgroundGradient: preset.value,
                         })
                       }
-                      className={`w-full h-16 rounded-lg  text-sm text-white border-2  transition-all ${
+                      className={`w-full h-16 rounded-lg   border-2  transition-all ${
                         formData.backgroundGradient === preset.value
                           ? " bg-primray border-primary border-b-6   "
                           : " border-transparent opacity-70 "
                       }`}
                       style={{ background: preset.value }}
                     >
-                      {formData.backgroundGradient === preset.value &&
-                        preset.name}
+                      <span className="text-sm text-white">
+                        {formData.backgroundGradient === preset.value &&
+                          preset.name}
+                      </span>
                     </button>
                   ))}
                 </div>

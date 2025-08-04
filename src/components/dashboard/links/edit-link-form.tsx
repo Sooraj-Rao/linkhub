@@ -7,13 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { toast } from "sonner";
 import type { Link } from "@/lib/types";
 
@@ -22,17 +16,6 @@ interface EditLinkFormProps {
   onSuccess: () => void;
   onCancel: () => void;
 }
-
-const linkTypes = [
-  { value: "website", label: "Website", icon: "🌐" },
-  { value: "social", label: "Social Media", icon: "📱" },
-  { value: "music", label: "Music", icon: "🎵" },
-  { value: "video", label: "Video", icon: "🎥" },
-  { value: "store", label: "Store", icon: "🛍️" },
-  { value: "blog", label: "Blog", icon: "📝" },
-  { value: "portfolio", label: "Portfolio", icon: "💼" },
-  { value: "other", label: "Other", icon: "🔗" },
-];
 
 export default function EditLinkForm({
   link,
@@ -115,29 +98,7 @@ export default function EditLinkForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="type">Type</Label>
-        <Select
-          value={formData.type}
-          onValueChange={(value) => handleInputChange("type", value)}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select link type" />
-          </SelectTrigger>
-          <SelectContent>
-            {linkTypes.map((type) => (
-              <SelectItem key={type.value} value={type.value}>
-                <span className="flex items-center gap-2">
-                  <span>{type.icon}</span>
-                  {type.label}
-                </span>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="icon">Icon URL (Optional)</Label>
+        <Label htmlFor="icon">Icon URL</Label>
         <Input
           id="icon"
           type="url"

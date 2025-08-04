@@ -219,12 +219,14 @@ function HomePage() {
     <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-black">
       <header className=" flex py-3 backdrop-blur z-[99]  px-10 sticky left-0 top-0 items-center justify-between">
         <Logo />
+        <Link href={'/auth/register'}>
         <Button>Get Started</Button>
+        </Link>
       </header>
       <div className="  overflow-x-hidden">
         <section
           ref={heroRef}
-          className="relative pt-16 pb-12 md:pt-24 md:pb-20 lg:pt-32 lg:pb-24 min-h-screen flex items-center"
+          className="relative pt-10 pb-8 md:pt-24 md:pb-20 lg:pt-32 lg:pb-24 min-h-screen flex items-center"
         >
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
@@ -241,10 +243,10 @@ function HomePage() {
                 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl   font-bold mb-8 leading-tight"
               >
                 Share Everything with
-                <span className="bg-gradient-to-r relative from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r ml-2 relative from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                   One Link
                   <motion.div
-                    className="mt-2 h-2 rounded-xl bg-gradient-to-r bottom-0 left-0 absolute from-primary to-primary/50"
+                    className="mt-2 ml-1 sm:h-2 h-1 rounded-xl bg-gradient-to-r bottom-0 left-0 absolute from-primary to-primary/50"
                     initial={{ width: 0 }}
                     animate={{ width: "100%" }}
                     transition={{ duration: 1.5, delay: 0.5 }}
@@ -293,7 +295,7 @@ function HomePage() {
           </div>
         </section>
 
-        <section id="preview" className="py-16 md:py-24 ">
+        <section id="preview" className=" md:py-24 ">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <div>
@@ -329,7 +331,7 @@ function HomePage() {
           </div>
         </section>
 
-        <section className="py-16 md:py-24">
+        <section className=" md:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <div>
@@ -371,8 +373,7 @@ function HomePage() {
             </motion.div>
           </div>
         </section>
-        <footer className=" flex justify-between px-20 items-center py-10 text-sm">
-          <Logo />
+        <footer className=" flex justify-center  items-center py-10 text-sm">
           <p>
             Developed by
             <a

@@ -138,7 +138,7 @@ export default function EditLinkHubForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="bio">Bio (Optional)</Label>
+        <Label htmlFor="bio">Bio</Label>
         <Textarea
           id="bio"
           name="bio"

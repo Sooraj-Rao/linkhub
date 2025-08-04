@@ -8,6 +8,7 @@ import LinkHubManager from "@/components/dashboard/linkhub-manager";
 import type { LinkHub } from "@/lib/types";
 import { toast } from "sonner";
 import PublicProfile from "@/components/public/public-profile";
+import { LinkhubSkeleton } from "@/components/dashboard/links/link-skeleton";
 
 export default function LinkHubLinksPage() {
   const params = useParams();
@@ -43,22 +44,7 @@ export default function LinkHubLinksPage() {
   };
 
   if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-        </div>
-        <div className="glass rounded-2xl p-6 animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+    return <LinkhubSkeleton />;
   }
 
   if (!linkHub) {
@@ -68,8 +54,8 @@ export default function LinkHubLinksPage() {
           LinkHub not found
         </h2>
         <p className="text-gray-600 mb-4">
-          The LinkHub youre looking for doesnt exist or you dont have access
-          to it.
+          The LinkHub youre looking for doesnt exist or you dont have access to
+          it.
         </p>
         <Button onClick={() => router.push("/dashboard/custom")}>
           <ArrowLeft className="w-4 h-4 mr-2" />

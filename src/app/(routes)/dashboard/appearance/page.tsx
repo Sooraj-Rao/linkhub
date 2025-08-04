@@ -124,14 +124,14 @@ export default function AppearancePage() {
       </div>
 
       {selectedLinkHub ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className=" col-span-2 ">
+        <div className="flex flex-col 2xl:flex-row justify-center xl:justify-normal gap-8">
+          <div className=" xl:w-[65%] ">
             <AppearanceCustomizer
               linkHub={selectedLinkHub}
               onUpdate={handleLinkHubUpdate}
             />
           </div>
-          <div className="lg:fixed lg:top-2 max-h-[calc(100vh-20px)] lg:right-8 w-[25%]  rounded-md overflow-scroll hideScrollBar">
+          <div className="xl:fixed lg:top-2 max-h-[calc(100vh-20px)] lg:right-8 xl:w-[25%]  rounded-md overflow-scroll hideScrollBar">
             <PublicProfile linkHub={selectedLinkHub} />
           </div>
         </div>
