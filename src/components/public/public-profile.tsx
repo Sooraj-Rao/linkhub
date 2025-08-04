@@ -7,7 +7,13 @@ import { Share2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LinkHub } from "@/lib/types";
 
-export default function PublicProfile({ linkHub }: { linkHub: LinkHub }) {
+export default function PublicProfile({
+  linkHub,
+  track = true,
+}: {
+  linkHub: LinkHub;
+  track?: boolean;
+}) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -15,6 +21,7 @@ export default function PublicProfile({ linkHub }: { linkHub: LinkHub }) {
   }, []);
 
   const handleLinkClick = async (linkId: string) => {
+    if (!track) return;
     await fetch("/api/analytics/click", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -78,7 +85,6 @@ export default function PublicProfile({ linkHub }: { linkHub: LinkHub }) {
 
     return style;
   };
-
   const backgroundStyle = getBackgroundStyle();
   const buttonStyleObj = getButtonStyle();
   const textColor = linkHub.textColor || "#000000";
