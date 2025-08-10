@@ -19,6 +19,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Mail, Lock } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Logo } from "../dashboard/dashboard-sidebar";
+import TestCredentials from "./test-data";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -41,8 +42,23 @@ export default function LoginForm() {
     }
   };
 
+  const handleUseDemoCredentials = async (
+    demoEmail: string,
+    demoPassword: string
+  ) => {
+    try {
+      setLoading(true);
+      await signIn(demoEmail, demoPassword);
+    } catch {
+      setError("An error occurred during login");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Card className="w-full max-w-md mx-auto">
+      <TestCredentials onUse={handleUseDemoCredentials} />
       <CardHeader className="space-y-1">
         <CardTitle className="flex justify-center ">
           <Logo />

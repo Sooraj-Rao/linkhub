@@ -19,6 +19,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Mail, Lock, User } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { Logo } from "../dashboard/dashboard-sidebar";
+import TestCredentials from "./test-data";
 
 export default function RegisterForm() {
   const [name, setName] = useState("");
@@ -27,7 +28,7 @@ export default function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { signUp } = useAuth();
+  const { signUp, signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,8 +56,23 @@ export default function RegisterForm() {
     }
   };
 
+  const handleUseDemoCredentials = async (
+    demoEmail: string,
+    demoPassword: string
+  ) => {
+    try {
+      setLoading(true);
+      await signIn(demoEmail, demoPassword);
+    } catch {
+      setError("An error occurred during login");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Card className="w-full max-w-md mx-auto">
+      <TestCredentials onUse={handleUseDemoCredentials} />
       <CardHeader className="space-y-1">
         <CardTitle className="flex justify-center ">
           <Logo />
